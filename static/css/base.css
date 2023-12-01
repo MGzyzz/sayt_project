@@ -1,0 +1,36 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+body > .container {
+    flex-grow: 1;
+}
+
+footer {
+    flex-shrink: 0;
+    /* Prevent footer from shrinking */
+}
+
+.block-icon {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: 30px;
+    background-color: rgb(108,117,125);
+    /*padding: 20px 10px 0 10px;*/
+
+}
+
+.block-icon:hover {
+    background-color: white;
+    transform: scale(1.05);
+}
