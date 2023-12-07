@@ -34,25 +34,19 @@ class SendMessageView(generics.CreateAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
-    print('work')
 
     def post(self, request, *args, **kwargs):
-        print('work post')
         try:
             response = super().post(request, *args, **kwargs)
-            print("Response:", response)
         except Exception as e:
-            print("Error during processing:", str(e))
             return JsonResponse({"error": str(e)}, status=500)
 
         if response.status_code == 400:
-            print("Validation errors:", response.data)
+            JsonResponse("Validation errors:", status=400)
 
         return response
 
     def perform_create(self, serializer):
-        print('work post create')
-        print("Received data:", self.request.data)
         serializer.save(sender=self.request.user)
 
 class MessageListView(generics.ListAPIView):

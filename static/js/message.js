@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    // При нажатии на кнопку "Открыть чат"
     $('.open-chat-btn').on('click', function () {
         var receiverId = $(this).data('receiver-id');
         var userName = $(this).data('username');
@@ -11,18 +10,26 @@ $(document).ready(function () {
         $('#chatMessages').empty();
         loadChatMessages(currentUserId, receiverId)
         $('#chatModal').modal('show');
+
     });
 
+
+     $('#messageText').keypress(function (e) {
+        if(e.which == 13 && !e.shiftKey) {
+            e.preventDefault();
+            $('#sendMessageButton').click();
+        }
+    });
 
     $('#sendMessageButton').on('click', function () {
         var messageText = $('#messageText').val();
         var receiverId = $('#receiverId').val();
-        console.log(`work ${receiverId} --- ${messageText}`)
         if (messageText.trim() !== '') {
-            sendChatMessage(receiverId, messageText);
+            sendChatMessage(receiverId, messageText, currentUserName);
             $('#messageText').val('');
         }
     });
+
 });
 
 
@@ -44,7 +51,7 @@ function sendChatMessage(receiverId, messageText) {
         success: function (response) {
 
             console.log("Message sent:", response);
-            $('#chatMessages').append(`<div class="chat-message">${messageText}</div> <hr>`);
+            $('#chatMessages').append(`<div class="chat-message"> <strong>${response.sender_name}</strong>: ${messageText}</div> <hr>`);
 
 
             var chatMessages = $('#chatMessages');
@@ -65,10 +72,12 @@ function loadChatMessages(userId, otherUserId) {
         success: function (response) {
             if (Array.isArray(response)) {
                 response.forEach(function (message) {
-                    // Используйте `message.sender_name` для получения имени отправителя
+                    console.log(`work: ${message.sender_name}`)
+
+                    var messageSenderName = message.sender_name || 'Аноним';
                     $('#chatMessages').append(
-                      `<div class="chat-message">
-                        <strong>${message.sender_name}</strong>: ${message.text}
+                        `<div class="chat-message">
+                        <strong>${messageSenderName}</strong>: ${message.text}
                        </div><hr>`
                     );
                 });
