@@ -11,3 +11,5 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, verbose_name='Email')
     image = models.ImageField(upload_to='image')
     created_at = models.DateTimeField(auto_now_add=True)
+    liked_users = models.ManyToManyField('self', symmetrical=False, related_name='liked_by', blank=True)
+    disliked_users = models.ManyToManyField('self', symmetrical=False, related_name='disliked_by', blank=True)

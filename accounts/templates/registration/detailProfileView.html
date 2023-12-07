@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img src="{{ user.image.url }}" class="card-img-top" alt="{{ user.first_name }}">
+                <div class="card-body">
+                    <input type="hidden" id="currentUserId" value="{{ request.user.id }}">
+
+                    <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                    <p class="card-text">{{ user.description }}</p>
+                    <p class="card-text"><small class="text-muted">Joined on {{ user.created_at|date:"M d, Y" }}</small>
+                    </p>
+                    <p class="card-text">{{ user.email }}</p>
+                    <p class="card-text">Status: {% if user.status %}Active{% else %}Inactive{% endif %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Liked Users</h5>
+                    <ul class="list-group">
+                        {% for liked_user in user.liked_users.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ liked_user.first_name }} {{ liked_user.last_name }}
+                                <button class="btn btn-primary btn-sm open-chat-btn"
+                                        data-receiver-id="{{ liked_user.id }}"
+                                        data-username="{{ liked_user.first_name }} {{ liked_user.last_name }}">Открыть
+                                    чат
+                                </button>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No liked users yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Модальное окно для чата -->
+    <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                    <input type="hidden" id="receiverId" value="">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatModalLabel">Chat with <span id="chatWithUsername"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="chatMessages" class="mb-3"></div>
+                    <textarea id="messageText" class="form-control" placeholder="Type a message"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="sendMessageButton" type="button" class="btn btn-primary">Send Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

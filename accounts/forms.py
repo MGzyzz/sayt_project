@@ -27,7 +27,8 @@ class LoginForm(AuthenticationForm):
     def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
-
+        print(username)
+        print(password)
         if username and password:
             user_model = get_user_model()
             if '@' in username:
